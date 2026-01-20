@@ -17,13 +17,21 @@ const Navbar = () => {
       <h2>📚 LMS</h2>
       <div>
         {token ? (
+          // Links visible only when LOGGED IN
           <>
             <Link to="/books" style={styles.link}>Books</Link>
-            {role === 'admin' && <Link to="/admin-dashboard" style={styles.link}>Admin</Link>}
+            <Link to="/profile" style={styles.link}>My Loans</Link>
+            {role === 'admin' && (
+              <Link to="/admin-dashboard" style={styles.link}>Admin Panel</Link>
+            )}
             <button onClick={handleLogout} style={styles.logoutBtn}>Logout</button>
           </>
         ) : (
-          <Link to="/login" style={styles.link}>Login</Link>
+          // Links visible only when LOGGED OUT
+          <>
+            <Link to="/login" style={styles.link}>Login</Link>
+            <Link to="/register" style={styles.link}>Register</Link>
+          </>
         )}
       </div>
     </nav>
@@ -31,9 +39,29 @@ const Navbar = () => {
 };
 
 const styles = {
-  nav: { display: 'flex', justifyContent: 'space-between', padding: '1rem', background: '#333', color: '#fff' },
-  link: { color: '#fff', margin: '0 10px', textDecoration: 'none' },
-  logoutBtn: { background: 'red', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }
+  nav: { 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    padding: '1rem', 
+    background: '#333', 
+    color: '#fff',
+    alignItems: 'center'
+  },
+  link: { 
+    color: '#fff', 
+    margin: '0 10px', 
+    textDecoration: 'none',
+    fontWeight: 'bold'
+  },
+  logoutBtn: { 
+    background: '#dc3545', 
+    color: 'white', 
+    border: 'none', 
+    cursor: 'pointer', 
+    padding: '5px 12px',
+    borderRadius: '4px',
+    marginLeft: '10px'
+  }
 };
 
 export default Navbar;

@@ -12,25 +12,24 @@ const Login = () => {
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+
+    // frontend/src/pages/Login.js
     const onSubmit = async e => {
-        e.preventDefault();
-        try {
-            const res = await axios.post('http://localhost:5000/api/users/login', formData);
-            
-            // 1. Save Token to LocalStorage
-            localStorage.setItem('token', res.data.token);
-            localStorage.setItem('role', res.data.user.role);
-            
-            // 2. Redirect based on role
-            if (res.data.user.role === 'admin') {
-                navigate('/admin-dashboard');
-            } else {
-                navigate('/books');
-            }
-        } catch (err) {
-            setError(err.response?.data?.error || 'Login failed');
-        }
-    };
+    e.preventDefault();
+    try {
+        const res = await axios.post('http://localhost:5000/api/users/login', formData);
+        
+        // CRITICAL: Ensure these names match what your backend sends!
+        localStorage.setItem('token', res.data.token); 
+        localStorage.setItem('role', res.data.user.role); 
+        
+        console.log("Login Success! Role:", res.data.user.role);
+        navigate('/books'); // Or wherever you want them to go
+    } catch (err) {
+        console.error(err.response?.data?.error);
+        setError(err.response?.data?.error || 'Login failed');
+    }
+};
 
     return (
         <div style={styles.container}>

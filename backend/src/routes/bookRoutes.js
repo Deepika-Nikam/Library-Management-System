@@ -10,3 +10,4 @@ router.get('/', bookController.getAllBooks);
 router.post('/add', verifyToken, isAdmin, bookController.addBook);
 
 module.exports = router;
+

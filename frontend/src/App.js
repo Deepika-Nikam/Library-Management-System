@@ -5,6 +5,8 @@ import Login from './pages/Login';
 import BookList from './pages/BookList';
 import AdminDashboard from './pages/AdminDashboard'; // We will create this next
 import Navbar from './components/Navbar';
+import Profile from './pages/Profile';
+import Register from './pages/Register'; 
 
 // Helper: Protected Route Component
 const ProtectedRoute = ({ children, roleRequired }) => {
@@ -24,24 +26,15 @@ const ProtectedRoute = ({ children, roleRequired }) => {
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        
-        {/* Student/General Routes */}
-        <Route 
-          path="/books" 
-          element={
-            <ProtectedRoute>
-              <BookList />
-            </ProtectedRoute>
-          } 
-        />
-
-        {/* Admin Only Routes */}
-        <Route 
+<Router>
+  <Navbar />
+  <Routes> {/* Everything related to a page must be inside here */}
+    <Route path="/login" element={<Login />} />
+    <Route path="/books" element={<BookList />} />
+    <Route path="/profile" element={<Profile />} />
+    <Route path="/register" element={<Register />} />
+    {/* ... other routes */}
+            <Route 
           path="/admin-dashboard" 
           element={
             <ProtectedRoute roleRequired="admin">
@@ -52,9 +45,17 @@ function App() {
 
         {/* Default Redirect */}
         <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+  </Routes>
+</Router>
   );
 }
 
 export default App;
+
+
+// frontend/src/App.js
+// Don't forget the import!
+
+// Inside your <Routes>
+
+// src/App.js
