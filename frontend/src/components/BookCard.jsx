@@ -19,14 +19,21 @@ const handleBorrow = async () => {
 };
 
   return (
-    <div className="book-card" style={styles.card}>
-      <h3>{book.title}</h3>
-      <p><strong>Author:</strong> {book.author_name}</p>
-      <p><strong>ISBN:</strong> {book.isbn}</p>
-      <p>Available: {book.available_count}</p>
-      {isOutOfStock ? <span style={{color: 'red'}}>Out of Stock</span> : <button onClick={() => handleBorrow(book.id)}>Borrow</button>}
-      <button style={styles.button} disabled={book.available_count === 0}>
-        Borrow Book
+    <div style={styles.card}>
+      {/* Check if these match your SQL column names exactly */}
+      <h3>{book.book_name}</h3> 
+      <p><strong>Author:</strong> {book.author}</p>
+      <p><strong>Category:</strong> {book.category}</p>
+      <p><strong>Stock:</strong> {book.available_count}</p>
+      
+      {/* If you have an ISBN column, make sure it's named correctly */}
+      <p><strong>ISBN:</strong> {book.isbn || 'N/A'}</p>
+
+      <button 
+        disabled={book.available_count <= 0}
+        onClick={() => handleBorrow(book.id)}
+      >
+        {book.available_count > 0 ? 'Borrow Book' : 'Out of Stock'}
       </button>
     </div>
   );
@@ -40,7 +47,3 @@ const styles = {
 export default BookCard;
 
 
-// Change this logic in your BookCard component
-
-
-// And make sure you are displaying the correct variable:

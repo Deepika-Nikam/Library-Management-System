@@ -17,6 +17,23 @@ const Profile = () => {
         fetchLoans();
     }, []);
 
+    // frontend/src/pages/Profile.js
+
+const handleReturn = async (transactionId, bookId) => {
+    try {
+        // Calling the backend route we just created
+        await api.post('/transactions/return', { transactionId, bookId });
+        
+        alert("Book returned successfully!");
+        
+        // Refresh the list so the returned book disappears from "My Loans"
+        window.location.reload(); 
+    } catch (err) {
+        console.error(err);
+        alert(err.response?.data?.error || "Failed to return book");
+    }
+};
+
     return (
         <div style={{ padding: '20px' }}>
             <h2>My Borrowed Books</h2>
@@ -30,13 +47,20 @@ const Profile = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {loans.map(loan => (
-                            <tr key={loan.id} style={{ borderBottom: '1px solid #ddd' }}>
-                                <td>{loan.book_name}</td>
-                                <td>{loan.author}</td>
-                                <td>{new Date(loan.issue_date).toLocaleDateString()}</td>
-                            </tr>
-                        ))}
+{loans.map(loan => (
+    <tr key={loan.id}>
+        <td>{loan.book_name}</td>
+        <td>{new Date(loan.issue_date).toLocaleDateString()}</td>
+        <td>
+            <button 
+                onClick={() => handleReturn(loan.id, loan.book_id)}
+                style={{ backgroundColor: '#ffc107', cursor: 'pointer' }}
+            >
+                Return Book
+            </button>
+        </td>
+    </tr>
+))}
                     </tbody>
                 </table>
             )}

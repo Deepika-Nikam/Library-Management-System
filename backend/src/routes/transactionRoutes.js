@@ -6,5 +6,6 @@ const { verifyToken } = require('../middleware/authMiddleware');
 
 router.post('/issue', verifyToken, transactionController.issueBook);
 router.get('/my-loans', verifyToken, transactionController.getUserLoans);
+router.post('/return', verifyToken, transactionController.returnBook);
 
 module.exports = router;
