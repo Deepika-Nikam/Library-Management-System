@@ -20,6 +20,22 @@ const AdminLogs = () => {
     fetchLogs();
 }, []);
 
+const handleReturn = async (transactionId) => {
+    try {
+        await axios.put(`http://localhost:5000/api/admin/return/${transactionId}`, {}, {
+            headers: { 'x-auth-token': localStorage.getItem('token') }
+        });
+        
+        alert("Book marked as returned!");
+        
+        // Refresh the logs automatically so the button disappears
+        window.location.reload(); 
+    } catch (err) {
+        console.error("Return failed:", err);
+        alert("Could not process return.");
+    }
+};
+
 
 
     return (
@@ -33,23 +49,38 @@ const AdminLogs = () => {
                         <th>Issued On</th>
                         <th>Status</th>
                         <th>Returned On</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {logs.map(log => (
-                        <tr key={log.id} style={styles.tr}>
-                            <td>{log.user_name} <br/><small>{log.user_email}</small></td>
-                            <td>{log.book_name}</td>
-                            <td>{new Date(log.issue_date).toLocaleDateString()}</td>
-                            <td>
-                                <span style={log.status === 'issued' ? styles.issued : styles.returned}>
-                                    {log.status.toUpperCase()}
-                                </span>
-                            </td>
-                            <td>{log.return_date ? new Date(log.return_date).toLocaleDateString() : '-'}</td>
-                        </tr>
-                    ))}
-                </tbody>
+<tbody>
+  {logs.length > 0 ? (
+    logs.map((log) => (
+      <tr key={log.id}>
+        <td>{log.user_name}</td>
+        <td>{log.book_name}</td>
+        <td>{new Date(log.issue_date).toLocaleDateString()}</td>
+        <td>{log.status}</td>
+        <td>{log.return_date ? new Date(log.return_date).toLocaleDateString() : '—'}</td>
+        <td>
+  {log.status === 'issued' && (
+    <button 
+      onClick={() => handleReturn(log.id)}
+      style={{ padding: '5px 10px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+    >
+      Mark as Returned
+    </button>
+  )}
+</td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+        No transactions found in the system.
+      </td>
+    </tr>
+  )}
+</tbody>
             </table>
         </div>
     );

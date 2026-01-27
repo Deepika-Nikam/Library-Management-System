@@ -57,7 +57,7 @@ return (
             
             <button 
                 onClick={handleBorrow} 
-                disabled={book.available_count <= 0}
+                disabled={book.available_count == 0}
                 style={book.available_count > 0 ? styles.button : styles.disabledButton}
             >
                 {book.available_count > 0 ? 'Borrow Book' : 'Out of Stock'}

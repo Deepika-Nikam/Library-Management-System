@@ -38,17 +38,21 @@ function App() {
     <Route path="/register" element={<Register />} />
     {/* ... other routes */}
             <Route 
-          path="/admin-dashboard" 
-          element={
-            <ProtectedRoute roleRequired="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          } 
-        />
+  path="/admin-dashboard" 
+  element={
+    role === 'admin' 
+      ? <AdminDashboard /> 
+      : <Navigate to="/books" />
+  } 
+/>
         <Route 
-          path="/admin/logs" 
-          element={token && role === 'admin' ? <AdminLogs /> : <Navigate to="/login" />} 
-        />
+  path="/admin/logs" 
+  element={
+    role === 'admin' 
+      ? <AdminLogs /> 
+      : <Navigate to="/books" />
+  } 
+/>
 
         {/* Default Redirect */}
         <Route path="*" element={<Navigate to="/login" />} />
