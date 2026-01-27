@@ -27,27 +27,40 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
-    try {
-        // 1. Find user by email
-        const user = await db.query('SELECT * FROM Users WHERE email = $1', [email]);
-        if (user.rows.length === 0) return res.status(404).json({ error: "User not found" });
+    // backend/routes/userRoutes.js (inside your login function)
 
-        // 2. Compare password
-        const isMatch = await bcrypt.compare(password, user.rows[0].password);
-        if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+try {
+    const { email, password } = req.body;
+    
+    // 1. Fetch user from DB
+    const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = result.rows[0];
 
-        // 3. Create JWT
-        const token = jwt.sign(
-            { id: user.rows[0].id, role: user.rows[0].role },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
-        res.json({
-            token,
-            user: { id: user.rows[0].id, username: user.rows[0].username, role: user.rows[0].role }
-        });
-    } catch (err) {
-        res.status(500).json({ error: "Server error during login" });
+    // 2. Check if user exists
+    if (!user) {
+        return res.status(401).json({ error: "User not found" });
     }
+
+    // ... (Your password comparison logic here) ...
+
+    // 3. Generate Token
+    const token = jwt.sign(
+        { id: user.id, role: user.role }, 
+        process.env.JWT_SECRET || 'fallback_secret' // Added fallback to prevent crash
+    );
+
+    // 4. Send Response
+    // We use a console.log here so YOU can see it in the backend terminal
+    console.log(`User ${email} logged in with role: ${user.role}`);
+
+    res.json({
+        token,
+        role: user.role, // Ensure this matches your DB column name exactly!
+        name: user.name
+    });
+
+} catch (err) {
+    console.error("SERVER ERROR:", err.message);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
+}
 };

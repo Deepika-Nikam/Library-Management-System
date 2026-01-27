@@ -5,13 +5,17 @@ import { Link, useNavigate } from 'react-router-dom';
 const Navbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const userRole = localStorage.getItem('role');
   const role = localStorage.getItem('role');
 
-  const handleLogout = () => {
+const handleLogout = () => {
     localStorage.clear();
     navigate('/login');
+    window.location.reload(); // Force a clean state
   };
 
+  console.log("Current Token:", token);
+console.log("Current Role:", userRole);
   return (
     <nav style={styles.nav}>
       <h2>📚 LMS</h2>
@@ -21,9 +25,12 @@ const Navbar = () => {
           <>
             <Link to="/books" style={styles.link}>Books</Link>
             <Link to="/profile" style={styles.link}>My Loans</Link>
-            {role === 'admin' && (
-              <Link to="/admin-dashboard" style={styles.link}>Admin Panel</Link>
-            )}
+            {token && userRole === 'admin' && (
+          <>
+            <Link to="/admin-dashboard" style={styles.link}>Admin Panel</Link>
+            <Link to="/admin/logs" style={styles.adminLink}>Admin Logs</Link>
+          </>
+        )}
             <button onClick={handleLogout} style={styles.logoutBtn}>Logout</button>
           </>
         ) : (
@@ -33,6 +40,7 @@ const Navbar = () => {
             <Link to="/register" style={styles.link}>Register</Link>
           </>
         )}
+        
       </div>
     </nav>
   );

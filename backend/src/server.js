@@ -13,11 +13,13 @@ app.use(express.json()); // Parses incoming JSON requests
 // Import Routes (You'll create these files next)
 const bookRoutes = require('./routes/bookRoutes');
 const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 // Use Routes
 app.use('/api/books', bookRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/transactions', require('./routes/transactionRoutes'));
+app.use('/api/admin', adminRoutes);
 
 // Basic Health Check
 app.get('/', (req, res) => {

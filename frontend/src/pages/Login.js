@@ -14,20 +14,35 @@ const Login = () => {
 
 
     // frontend/src/pages/Login.js
-    const onSubmit = async e => {
+const onSubmit = async (e) => {
     e.preventDefault();
     try {
         const res = await axios.post('http://localhost:5000/api/users/login', formData);
         
-        // CRITICAL: Ensure these names match what your backend sends!
-        localStorage.setItem('token', res.data.token); 
-        localStorage.setItem('role', res.data.user.role); 
+        // 1. Check your console to see what the backend keys are named!
+        console.log("Full Backend Response:", res.data);
+
+        // 2. Save to localStorage
+        // If your backend sends 'userRole' or 'user_role', change res.data.role below
+        const token = res.data.token;
+        const role = res.data.role; 
+
+        if (token) localStorage.setItem('token', token);
+        if (role) {
+            localStorage.setItem('role', role);
+            console.log("Role saved successfully:", role);
+        } else {
+            console.warn("Role was missing in the backend response!");
+        }
+
+        // 3. Force a full page redirect to /books
+        // This ensures App.js and Navbar.js re-read the localStorage
+        window.location.href = '/books';
         
-        console.log("Login Success! Role:", res.data.user.role);
-        navigate('/books'); // Or wherever you want them to go
     } catch (err) {
-        console.error(err.response?.data?.error);
-        setError(err.response?.data?.error || 'Login failed');
+        const errorMsg = err.response?.data?.error || err.response?.data?.msg || 'Login failed';
+        console.error("Login Error:", errorMsg);
+        setError(errorMsg);
     }
 };
 

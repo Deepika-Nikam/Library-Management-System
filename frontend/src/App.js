@@ -3,10 +3,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import BookList from './pages/BookList';
-import AdminDashboard from './pages/AdminDashboard'; // We will create this next
+import AdminDashboard from './pages/AdminDashboard';
 import Navbar from './components/Navbar';
 import Profile from './pages/Profile';
 import Register from './pages/Register'; 
+import AdminLogs from './pages/AdminLogs';
 
 // Helper: Protected Route Component
 const ProtectedRoute = ({ children, roleRequired }) => {
@@ -25,10 +26,12 @@ const ProtectedRoute = ({ children, roleRequired }) => {
 };
 
 function App() {
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
   return (
 <Router>
   <Navbar />
-  <Routes> {/* Everything related to a page must be inside here */}
+  <Routes> 
     <Route path="/login" element={<Login />} />
     <Route path="/books" element={<BookList />} />
     <Route path="/profile" element={<Profile />} />
@@ -42,6 +45,10 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        <Route 
+          path="/admin/logs" 
+          element={token && role === 'admin' ? <AdminLogs /> : <Navigate to="/login" />} 
+        />
 
         {/* Default Redirect */}
         <Route path="*" element={<Navigate to="/login" />} />
@@ -52,10 +59,3 @@ function App() {
 
 export default App;
 
-
-// frontend/src/App.js
-// Don't forget the import!
-
-// Inside your <Routes>
-
-// src/App.js
