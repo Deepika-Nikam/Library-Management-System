@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ManageBooks = () => {
     const [books, setBooks] = useState([]);
@@ -7,7 +8,6 @@ const ManageBooks = () => {
 
     const fetchBooks = async () => {
         try {
-            // Using your standard books fetch route
             const res = await axios.get('http://localhost:5000/api/books');
             setBooks(res.data);
         } catch (err) {
@@ -31,7 +31,7 @@ const ManageBooks = () => {
             // Refresh local state
             setBooks(books.map(b => b.id === id ? { ...b, available_count: newValue } : b));
         } catch (err) {
-            alert("Update failed. Check if you are logged in as Admin.");
+            toast.error("Update failed. Check if you are logged in as Admin.");
         }
     };
 
@@ -43,7 +43,7 @@ const ManageBooks = () => {
                 });
                 setBooks(books.filter(b => b.id !== id));
             } catch (err) {
-                alert("Cannot delete: This book is likely currently issued to a student.");
+                toast.error("Cannot delete: This book is likely currently issued to a student.");
             }
         }
     };

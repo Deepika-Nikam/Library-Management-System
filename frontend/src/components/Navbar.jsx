@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // Used to highlight the active link
+  const location = useLocation(); 
   const token = localStorage.getItem('token');
   const userRole = localStorage.getItem('role');
 
@@ -68,8 +68,8 @@ const styles = {
     display: 'flex', 
     justifyContent: 'space-between', 
     padding: '0.8rem 2.5rem', 
-    background: 'rgba(44, 62, 80, 0.95)', // Deep elegant blue-grey
-    backdropFilter: 'blur(10px)', // Frosted glass effect
+    background: 'rgba(44, 62, 80, 0.95)', 
+    backdropFilter: 'blur(10px)', 
     color: '#fff',
     alignItems: 'center',
     boxShadow: '0 4px 12px rgba(0,0,0,0.15)',

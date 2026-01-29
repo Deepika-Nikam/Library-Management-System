@@ -20,25 +20,25 @@ const AdminDashboard = () => {
                         style={activeTab === 'dashboard' ? styles.activeBtn : styles.btn} 
                         onClick={() => setActiveTab('dashboard')}
                     >
-                        📊 Dashboard
+                        Dashboard
                     </button>
                     <button 
                         style={activeTab === 'logs' ? styles.activeBtn : styles.btn} 
                         onClick={() => setActiveTab('logs')}
                     >
-                        📜 System Logs
+                         System Logs
                     </button>
                     <button 
                         style={activeTab === 'add' ? styles.activeBtn : styles.btn} 
                         onClick={() => setActiveTab('add')}
                     >
-                        ➕ Add New Book
+                        Add New Book
                     </button>
                     <button
                         style={activeTab === 'manage' ? styles.activeBtn : styles.btn} 
                         onClick={() => setActiveTab('manage')}
                     >
-                        📋 Manage Books
+                        Manage Books
                     </button>
                 </nav>
             </aside>

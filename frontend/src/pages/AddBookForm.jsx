@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 const AddBookForm = () => {
@@ -15,26 +16,23 @@ const AddBookForm = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            // Mapping state to match your backend expectations
             const payload = {
-                book_name: book.book_name,
-                author: book.author,
-                isbn: book.isbn,
-                count: parseInt(book.count),
-                available_count: parseInt(book.count) // Initially, available equals total count
+            book_name: book.book_name,
+            author: book.author,
+            isbn: book.isbn,
+            count: parseInt(book.count)
             };
 
             await axios.post('http://localhost:5000/api/admin/add-book', payload, {
                 headers: { 'x-auth-token': localStorage.getItem('token') }
             });
 
-            alert("✨ Book successfully added to the database!");
-            
-            // Reset form
+            toast.success("Book successfully added to the database!");
+          
             setBook({ book_name: '', author: '', isbn: '', count: 1 });
         } catch (err) {
             console.error(err);
-            alert("❌ Error: Could not add book. Ensure all fields are correct.");
+            toast.error("Error: Could not add book. Ensure all fields are correct.");
         } finally {
             setLoading(false);
         }
@@ -43,7 +41,7 @@ const AddBookForm = () => {
     return (
         <div style={styles.card}>
             <div style={styles.header}>
-                <h2 style={styles.title}>📖 Catalog New Book</h2>
+                <h2 style={styles.title}>Add New Book</h2>
                 <p style={styles.subtitle}>Update the database with new library inventory</p>
             </div>
             
@@ -102,7 +100,7 @@ const AddBookForm = () => {
                     disabled={loading}
                     style={loading ? {...styles.button, opacity: 0.7} : styles.button}
                 >
-                    {loading ? 'Processing...' : '➕ Add to Collection'}
+                    {loading ? 'Processing...' : 'Add to Collection'}
                 </button>
             </form>
         </div>

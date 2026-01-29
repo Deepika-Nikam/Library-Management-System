@@ -1,4 +1,3 @@
-// frontend/src/services/bookService.js
 import api from './api';
 
 export const bookService = {
@@ -11,5 +10,5 @@ export const bookService = {
             throw error;
         }
     },
-    // You can add getBookById or searchBooks here later!
+   
 };

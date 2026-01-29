@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require("../config/db"); // Your database connection
+const db = require("../config/db");
 
 router.get('/logs', async (req, res) => {
     try {
@@ -37,76 +37,56 @@ router.get('/stats', async (req, res) => {
     }
 });
 
-// backend/routes/adminRoutes.js
-
 router.put('/return/:transactionId', async (req, res) => {
+    const client = await db.connect(); 
     try {
+        await client.query('BEGIN'); 
+
         const { transactionId } = req.params;
 
-        // 1. Check if transaction exists and is currently 'Issued'
-        const checkTrans = await db.query(
-            'SELECT * FROM transactions WHERE id = $1', 
-            [transactionId]
-        );
-
-        if (checkTrans.rows.length === 0) {
-            return res.status(404).json({ error: "Transaction not found" });
-        }
-
-        // 2. Update the transaction to 'Returned'
-        await db.query(
-            'UPDATE transactions SET status = $1, return_date = NOW() WHERE id = $2',
+        const updateResult = await client.query(
+            'UPDATE transactions SET status = $1, return_date = NOW() WHERE id = $2 RETURNING book_id',
             ['Returned', transactionId]
         );
 
-        // 3. Increment the book availability back up
-        const bookId = checkTrans.rows[0].book_id;
-        await db.query(
+        if (updateResult.rows.length === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: "Transaction not found" });
+        }
+
+
+        const bookId = updateResult.rows[0].book_id;
+        await client.query(
             'UPDATE books SET available_count = available_count + 1 WHERE id = $1',
             [bookId]
         );
 
-        res.json({ message: "Success! Book returned and inventory updated." });
-
-    } catch (err) {
-        console.error("DETAILED BACKEND ERROR:", err.message); // Look at your terminal for this!
-        res.status(500).json({ error: "Database update failed", details: err.message });
-    }
-});
-
-router.put('/return/:transactionId', async (req, res) => {
-    try {
-        const { transactionId } = req.params;
-        // 1. Update transaction status
-        await db.query(
-            'UPDATE transactions SET status = $1, return_date = NOW() WHERE id = $2',
-            ['Returned', transactionId]
-        );
-        // 2. Make the book available again in the books table
-        const trans = await db.query('SELECT book_id FROM transactions WHERE id = $1', [transactionId]);
-        await db.query('UPDATE books SET available_count = available_count + 1 WHERE id = $1', [trans.rows[0].book_id]);
-
+        await client.query('COMMIT'); 
         res.json({ message: "Book returned successfully" });
     } catch (err) {
-        res.status(500).send("Server Error");
+        await client.query('ROLLBACK');
+        console.error("Return Error:", err.message);
+        res.status(500).json({ error: "Return process failed" });
+    } finally {
+        client.release(); 
     }
 });
 
 router.post('/add-book', async (req, res) => {
-    const { title, author, isbn, copies } = req.body;
+
+    const { book_name, author, isbn, count } = req.body; 
     try {
         await db.query(
-            'INSERT INTO books (book_name, author, isbn, available_count) VALUES ($1, $2, $3, $4)',
-            [title, author, isbn, copies]
+            'INSERT INTO books (book_name, author, isbn, count, available_count) VALUES ($1, $2, $3, $4, $5)',
+            [book_name, author, isbn, count, count] 
         );
         res.json({ message: "Book added!" });
     } catch (err) {
-        console.error(err.message);
+        console.error("Add Book Error:", err.message);
         res.status(500).send("Server Error");
     }
 });
 
-// Update stock
 router.put('/update-book/:id', async (req, res) => {
     const { count, available_count } = req.body;
     try {
@@ -120,7 +100,6 @@ router.put('/update-book/:id', async (req, res) => {
     }
 });
 
-// Delete book
 router.delete('/delete-book/:id', async (req, res) => {
     try {
         await db.query('DELETE FROM books WHERE id = $1', [req.params.id]);

@@ -12,14 +12,17 @@ const pool = new Pool({
 
 // Logic to check if the connection is successful
 pool.on('connect', () => {
-  console.log('✅ Connected to the local PostgreSQL database');
+  console.log('Connected to the local PostgreSQL database');
 });
 
 pool.on('error', (err) => {
-  console.error('❌ Unexpected error on idle client', err);
+  console.error('Unexpected error on idle client', err);
   process.exit(-1);
 });
 
+// backend/src/config/db.js
+
 module.exports = {
   query: (text, params) => pool.query(text, params),
+  connect: () => pool.connect(), // Add this line!
 };

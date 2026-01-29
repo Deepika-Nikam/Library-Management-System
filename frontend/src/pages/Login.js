@@ -23,7 +23,6 @@ const Login = () => {
             if (token) localStorage.setItem('token', token);
             if (role) localStorage.setItem('role', role);
 
-            // Redirect to books
             window.location.href = '/books';
         } catch (err) {
             setError(err.response?.data?.error || err.response?.data?.msg || 'Invalid credentials');

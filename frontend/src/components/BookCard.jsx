@@ -8,7 +8,7 @@ const BookCard = ({ book, onBorrowSuccess }) => {
         try {
             const res = await api.post('/transactions/issue', { bookId: book.id });
             alert(res.data.message);
-            onBorrowSuccess(); // Trigger parent fetch instead of reload
+            onBorrowSuccess(); 
         } catch (err) {
             alert(err.response?.data?.error || "Borrow failed");
         }
@@ -42,7 +42,7 @@ const BookCard = ({ book, onBorrowSuccess }) => {
                 </div>
                 <div style={styles.footer}>
                     <div style={styles.meta}>
-                        <span style={styles.stock}>📦 {book.available_count} Left</span>
+                        <span style={styles.stock}>{book.available_count} Left</span>
                     </div>
                     <button 
                         onClick={handleBorrow} 

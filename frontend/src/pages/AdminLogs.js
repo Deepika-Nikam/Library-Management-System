@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 const AdminLogs = () => {
@@ -12,7 +13,7 @@ const AdminLogs = () => {
                 const res = await axios.get('http://localhost:5000/api/admin/logs', {
                     headers: { 'x-auth-token': localStorage.getItem('token') }
                 });
-                console.log("Backend Data Check:", res.data); // Helpful for your demo!
+                console.log("Backend Data Check:", res.data); 
                 setLogs(res.data);
             } catch (err) {
                 console.error("Fetch error:", err);
@@ -28,23 +29,22 @@ const AdminLogs = () => {
             await axios.put(`http://localhost:5000/api/admin/return/${transactionId}`, {}, {
                 headers: { 'x-auth-token': localStorage.getItem('token') }
             });
-            alert("✨ Book marked as returned!");
+            toast.success("Book returned and inventory updated!");
             setLogs(logs.map(log => 
                 log.id === transactionId 
                 ? { ...log, status: 'Returned', return_date: new Date().toISOString() } 
                 : log
             ));
         } catch (err) {
-            alert("Could not process return.");
+            toast.error("Failed to process return.");
         }
     };
 
-    // FILTER LOGIC: Adjusted for your specific alias 'user_name'
     const filteredLogs = logs.filter(log => {
         if (!searchTerm.trim()) return true;
         
         const search = searchTerm.toLowerCase();
-        const student = (log.user_name || "").toLowerCase(); // Matches your SQL 'as user_name'
+        const student = (log.user_name || "").toLowerCase(); 
         const book = (log.book_name || "").toLowerCase();
         const status = (log.status || "").toLowerCase();
 
@@ -55,7 +55,7 @@ const AdminLogs = () => {
         <div style={styles.container}>
             <div style={styles.headerSection}>
                 <div style={styles.titleArea}>
-                    <h2 style={styles.header}>📜 System Transaction Logs</h2>
+                    <h2 style={styles.header}>System Transaction Logs</h2>
                     <p style={styles.subHeader}>Track all book movements and student activity</p>
                 </div>
                 

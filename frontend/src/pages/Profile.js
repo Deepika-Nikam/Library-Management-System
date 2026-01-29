@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
+import { toast } from 'react-toastify';
 
 const Profile = () => {
     const [loans, setLoans] = useState([]);
@@ -17,10 +18,10 @@ const Profile = () => {
     const handleReturn = async (transactionId, bookId) => {
         try {
             await api.post('/transactions/return', { transactionId, bookId });
-            alert("✨ Book returned successfully!");
+            toast.success("✨ Book returned successfully!");
             setLoans(loans.filter(loan => loan.id !== transactionId)); // Optimized: No reload needed
         } catch (err) {
-            alert(err.response?.data?.error || "Failed to return book");
+            toast.error(err.response?.data?.error || "Failed to return book");
         }
     };
 
@@ -32,15 +33,15 @@ const Profile = () => {
     };
 
     const renderDueStatus = (days) => {
-        if (days < 0) return <span style={styles.badgeOverdue}>⚠️ Overdue {Math.abs(days)}d</span>;
-        if (days <= 3) return <span style={styles.badgeUrgent}>⏳ {days}d left</span>;
-        return <span style={styles.badgeSafe}>✅ {days} days</span>;
+        if (days < 0) return <span style={styles.badgeOverdue}>Overdue {Math.abs(days)}d</span>;
+        if (days <= 3) return <span style={styles.badgeUrgent}>{days}d left</span>;
+        return <span style={styles.badgeSafe}>{days} days</span>;
     };
 
     return (
         <div style={styles.container}>
             <div style={styles.headerBox}>
-                <h2 style={styles.title}>📚 My Borrowed Books</h2>
+                <h2 style={styles.title}>My Borrowed Books</h2>
                 <p style={styles.subtitle}>Manage your active loans and return dates</p>
             </div>
 
