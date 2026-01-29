@@ -1,104 +1,71 @@
-// frontend/src/pages/BookList.js
-import React, { useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import BookCard from '../components/BookCard';
-// import { getAllBooks } from '../services/bookService'; // You'll define this next
-import api from '../services/api';
 import { bookService } from '../services/bookService';
 
-
 const BookList = () => {
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+    const [books, setBooks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
 
-// Filter the books array based on search input
-const filteredBooks = books.filter(book => 
-    book.book_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.isbn?.includes(searchTerm)
-);
+    const fetchBooks = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await bookService.getAllBooks();
+            setBooks(data);
+        } catch (e) { console.error(e); }
+        setLoading(false);
+    }, []);
 
+    useEffect(() => { fetchBooks(); }, [fetchBooks]);
 
+    const filteredBooks = books.filter(book => 
+        book.book_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-const fetchBooks = useCallback(async () => {
-    const data = await bookService.getAllBooks();
-    setBooks(data);
-}, []);
+    return (
+        <div style={styles.container}>
+            <div style={styles.heroSection}>
+                <h1 style={styles.heroTitle}>Discover Your Next Story</h1>
+                <div style={styles.searchWrapper}>
+                    <input 
+                        type="text" 
+                        placeholder="Search by title or author..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={styles.searchInput}
+                    />
+                    <span style={styles.searchIcon}>🔍</span>
+                </div>
+            </div>
 
-
-  useEffect(() => {
-        fetchBooks();
-    }, [fetchBooks]);
-
-  if (loading) return <h2>Loading the library...</h2>;
-
-return (
-    <div style={styles.container}>
-        {/* Search Bar Section */}
-        <div style={styles.searchWrapper}>
-            <input 
-                type="text" 
-                placeholder="Search by Title, Author, or ISBN..." 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={styles.searchInput}
-            />
-        </div>
-
-        {/* THE GRID SECTION - This is the fix */}
-        <div style={styles.grid}>
-            {filteredBooks.length > 0 ? (
-                filteredBooks.map(book => (
-                    <BookCard key={book.id} book={book} onBorrowSuccess={fetchBooks} />
-                ))
+            {loading ? (
+                <div style={styles.loader}>Shuffling the library shelves...</div>
             ) : (
-                <p>No books found matching your search.</p>
+                <div style={styles.grid}>
+                    {filteredBooks.length > 0 ? (
+                        filteredBooks.map(book => (
+                            <BookCard key={book.id} book={book} onBorrowSuccess={fetchBooks} />
+                        ))
+                    ) : (
+                        <div style={styles.noResults}>No books found matching "{searchTerm}"</div>
+                    )}
+                </div>
             )}
         </div>
-    </div>
-);
+    );
+};
 
-
-
-  // return (
-  //   <div style={{ padding: '2rem' }}>
-  //     <h1>Available Books</h1>
-  //     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
-  //       {books.map(book => (
-  //         <BookCard key={book.id} book={book} />
-  //       ))}
-  //     </div>
-  //   </div>
-  // );
+const styles = {
+    container: { padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' },
+    heroSection: { textAlign: 'center', marginBottom: '60px' },
+    heroTitle: { fontSize: '36px', color: '#2c3e50', marginBottom: '25px', fontWeight: '800' },
+    searchWrapper: { position: 'relative', maxWidth: '600px', margin: '0 auto' },
+    searchInput: { width: '100%', padding: '16px 25px 16px 50px', borderRadius: '50px', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', fontSize: '16px', outline: 'none', transition: '0.3s' },
+    searchIcon: { position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', fontSize: '18px' },
+    grid: { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '30px' },
+    loader: { textAlign: 'center', fontSize: '20px', color: '#95a5a6', marginTop: '100px' },
+    noResults: { textAlign: 'center', width: '100%', color: '#7f8c8d', fontSize: '18px', marginTop: '50px' }
 };
 
 export default BookList;
-
-const styles = {
-    container: {
-        padding: '40px 20px',
-        maxWidth: '1300px', // Limits width so cards don't stretch too far on huge monitors
-        margin: '0 auto',
-    },
-    searchWrapper: {
-        marginBottom: '40px',
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    searchInput: {
-        width: '100%',
-        maxWidth: '600px',
-        padding: '15px 25px',
-        borderRadius: '30px',
-        border: '1px solid #ddd',
-        fontSize: '1.1rem',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-        outline: 'none',
-    },
-    grid: {
-        display: 'flex',           // Activates Flexbox
-        flexWrap: 'wrap',          // Allows items to drop to next line
-        justifyContent: 'center',  // Centers the cards in the middle of the screen
-        gap: '30px',               // Adds equal spacing between all cards
-    }
-};

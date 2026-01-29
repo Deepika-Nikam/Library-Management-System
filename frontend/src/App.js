@@ -7,7 +7,6 @@ import AdminDashboard from './pages/AdminDashboard';
 import Navbar from './components/Navbar';
 import Profile from './pages/Profile';
 import Register from './pages/Register'; 
-import AdminLogs from './pages/AdminLogs';
 
 // Helper: Protected Route Component
 const ProtectedRoute = ({ children, roleRequired }) => {
@@ -37,20 +36,12 @@ function App() {
     <Route path="/profile" element={<Profile />} />
     <Route path="/register" element={<Register />} />
     {/* ... other routes */}
-            <Route 
-  path="/admin-dashboard" 
+  <Route 
+  path="/admin/*" 
   element={
-    role === 'admin' 
-      ? <AdminDashboard /> 
-      : <Navigate to="/books" />
-  } 
-/>
-        <Route 
-  path="/admin/logs" 
-  element={
-    role === 'admin' 
-      ? <AdminLogs /> 
-      : <Navigate to="/books" />
+    localStorage.getItem('role') === 'admin' 
+    ? <AdminDashboard /> 
+    : <Navigate to="/books" />
   } 
 />
 

@@ -1,52 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import Dashboard from './Dashboard';
+import AdminLogs from './AdminLogs';
+import AddBookForm from './AddBookForm';
+import ManageBooks from './ManageBooks';
 
 const AdminDashboard = () => {
-    const [stats, setStats] = useState({ total_books: 0, active_loans: 0, total_students: 0 });
-
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                const res = await axios.get('http://localhost:5000/api/admin/stats');
-                setStats(res.data);
-            } catch (err) {
-                console.error("Error fetching stats:", err);
-            }
-        };
-        fetchStats();
-    }, []);
-
-    // The data for the chart or display
-    const chartData = [
-        { name: 'Available', value: stats.total_books - stats.active_loans },
-        { name: 'Issued', value: parseInt(stats.active_loans) },
-    ];
+    const [activeTab, setActiveTab] = useState('dashboard');
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h2>📊 Library Overview</h2>
-            <div style={styles.statsContainer}>
-                <div style={styles.card}>
-                    <h3>📚 Total Books</h3>
-                    <p style={styles.statNumber}>{stats.total_books}</p>
+        <div style={styles.container}>
+            <aside style={styles.sidebar}>
+                <div style={styles.brand}>
+                    <span style={{fontSize: '24px'}}>🏛️</span>
+                    <h2 style={styles.brandText}>LMS ADMIN</h2>
                 </div>
-                <div style={styles.card}>
-                    <h3>⏳ Active Loans</h3>
-                    <p style={styles.statNumber}>{stats.active_loans}</p>
+                
+                <nav style={styles.navStack}>
+                    <button 
+                        style={activeTab === 'dashboard' ? styles.activeBtn : styles.btn} 
+                        onClick={() => setActiveTab('dashboard')}
+                    >
+                        📊 Dashboard
+                    </button>
+                    <button 
+                        style={activeTab === 'logs' ? styles.activeBtn : styles.btn} 
+                        onClick={() => setActiveTab('logs')}
+                    >
+                        📜 System Logs
+                    </button>
+                    <button 
+                        style={activeTab === 'add' ? styles.activeBtn : styles.btn} 
+                        onClick={() => setActiveTab('add')}
+                    >
+                        ➕ Add New Book
+                    </button>
+                    <button
+                        style={activeTab === 'manage' ? styles.activeBtn : styles.btn} 
+                        onClick={() => setActiveTab('manage')}
+                    >
+                        📋 Manage Books
+                    </button>
+                </nav>
+            </aside>
+
+            <main style={styles.content}>
+                <div style={styles.topBar}>
+                    <span>Welcome back, <strong>Admin</strong></span>
                 </div>
-                <div style={styles.card}>
-                    <h3>🎓 Students</h3>
-                    <p style={styles.statNumber}>{stats.total_students}</p>
-                </div>
-            </div>
+                {activeTab === 'dashboard' && <Dashboard />}
+                {activeTab === 'logs' && <AdminLogs />}
+                {activeTab === 'add' && <AddBookForm />}
+                {activeTab === 'manage' && <ManageBooks />}
+            </main>
         </div>
     );
 };
 
 const styles = {
-    statsContainer: { display: 'flex', gap: '20px', justifyContent: 'center' },
-    card: { padding: '20px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', textAlign: 'center', minWidth: '200px' },
-    statNumber: { fontSize: '2rem', color: '#007bff', fontWeight: 'bold' }
+    container: { display: 'flex', minHeight: '100vh', backgroundColor: '#f8fafc', fontFamily: "'Inter', sans-serif" },
+    sidebar: { width: '280px', backgroundColor: '#1e293b', padding: '30px 20px', display: 'flex', flexDirection: 'column', color: '#f8fafc' },
+    brand: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px', paddingLeft: '10px' },
+    brandText: { fontSize: '18px', fontWeight: 'bold', margin: 0, letterSpacing: '1px' },
+    navStack: { display: 'flex', flexDirection: 'column', gap: '8px' },
+    btn: { padding: '14px 18px', cursor: 'pointer', backgroundColor: 'transparent', color: '#94a3b8', border: 'none', textAlign: 'left', borderRadius: '12px', fontSize: '15px', transition: '0.2s', fontWeight: '500' },
+    activeBtn: { padding: '14px 18px', cursor: 'pointer', backgroundColor: '#3b82f6', color: 'white', border: 'none', textAlign: 'left', borderRadius: '12px', fontSize: '15px', fontWeight: '600', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)' },
+    content: { flex: 1, padding: '40px', overflowY: 'auto' },
+    topBar: { marginBottom: '30px', display: 'flex', justifyContent: 'flex-end', fontSize: '14px', color: '#64748b' }
 };
 
 export default AdminDashboard;
