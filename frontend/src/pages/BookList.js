@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import BookCard from '../components/BookCard';
 import { bookService } from '../services/bookService';
+import SearchIcon from '@mui/icons-material/Search';
 
 const BookList = () => {
     const [books, setBooks] = useState([]);
@@ -35,7 +36,7 @@ const BookList = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={styles.searchInput}
                     />
-                    <span style={styles.searchIcon}>🔍</span>
+                    <span style={styles.searchIcon}><SearchIcon /></span>
                 </div>
             </div>
 

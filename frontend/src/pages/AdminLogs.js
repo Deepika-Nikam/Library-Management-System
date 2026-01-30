@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import SearchIcon from '@mui/icons-material/Search';
 
 const AdminLogs = () => {
     const [logs, setLogs] = useState([]);
@@ -61,7 +62,7 @@ const AdminLogs = () => {
                 
                 {/* Search Bar Implementation */}
                 <div style={styles.searchContainer}>
-                    <span style={styles.searchIcon}>🔍</span>
+                    <span style={styles.searchIcon}><SearchIcon /></span>
                     <input 
                         type="text" 
                         placeholder="Search student or book..." 

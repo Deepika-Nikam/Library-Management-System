@@ -28,11 +28,12 @@ router.get('/stats', async (req, res) => {
         const stats = await db.query(`
             SELECT 
                 (SELECT COUNT(*) FROM books) as total_books,
-                (SELECT COUNT(*) FROM transactions WHERE status = 'Issued') as active_loans,
+                (SELECT COUNT(*) FROM transactions WHERE LOWER(status) = 'issued') as active_loans,
                 (SELECT COUNT(*) FROM users WHERE role = 'student') as total_students
         `);
         res.json(stats.rows[0]);
     } catch (err) {
+        console.error("Stats Error:", err.message);
         res.status(500).send("Server Error");
     }
 });
@@ -88,13 +89,13 @@ router.post('/add-book', async (req, res) => {
 });
 
 router.put('/update-book/:id', async (req, res) => {
-    const { count, available_count } = req.body;
+    const { available_copies } = req.body;
     try {
         await db.query(
-            'UPDATE books SET count = $1, available_count = $2 WHERE id = $3', 
-            [count, available_count, req.params.id]
+            'UPDATE books SET count = $1, available_count = $1 WHERE id = $2', 
+            [available_copies, req.params.id]
         );
-        res.json({ message: "Inventory updated" });
+        res.json({ message: "Stock updated across system" });
     } catch (err) { 
         res.status(500).send("Server Error"); 
     }

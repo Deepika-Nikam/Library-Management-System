@@ -35,7 +35,6 @@ const Login = () => {
         <div style={styles.page}>
             <div style={styles.card}>
                 <div style={styles.header}>
-                    <span style={styles.icon}>🔓</span>
                     <h2 style={styles.title}>Welcome Back</h2>
                     <p style={styles.subtitle}>Sign in to access your library account</p>
                 </div>

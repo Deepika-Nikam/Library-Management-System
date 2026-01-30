@@ -16,7 +16,7 @@ const Register = () => {
         e.preventDefault();
         try {
             await axios.post('http://localhost:5000/api/users/register', formData);
-            toast.success("✨ Account created! You can now login.");
+            toast.success("Account created! You can now login.");
             navigate('/login');
         } catch (err) {
             setError(err.response?.data?.error || 'Registration failed');
@@ -27,7 +27,6 @@ const Register = () => {
         <div style={styles.page}>
             <div style={styles.card}>
                 <div style={styles.header}>
-                    <span style={styles.icon}>📝</span>
                     <h2 style={styles.title}>Join the Library</h2>
                     <p style={styles.subtitle}>Start your reading journey today</p>
                 </div>
@@ -37,11 +36,11 @@ const Register = () => {
                 <form onSubmit={onSubmit} style={styles.form}>
                     <div style={styles.inputGroup}>
                         <label style={styles.label}>Full Name</label>
-                        <input name="username" placeholder="John Doe" onChange={onChange} required style={styles.input} />
+                        <input name="username" placeholder="Your Name" onChange={onChange} required style={styles.input} />
                     </div>
                     <div style={styles.inputGroup}>
                         <label style={styles.label}>Email Address</label>
-                        <input name="email" type="email" placeholder="john@example.com" onChange={onChange} required style={styles.input} />
+                        <input name="email" type="email" placeholder="name@example.com" onChange={onChange} required style={styles.input} />
                     </div>
                     <div style={styles.inputGroup}>
                         <label style={styles.label}>Password</label>

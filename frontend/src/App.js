@@ -35,7 +35,7 @@ function App() {
     <Route path="/books" element={<BookList />} />
     <Route path="/profile" element={<Profile />} />
     <Route path="/register" element={<Register />} />
-    <Route path="/admin/*" element={ localStorage.getItem('role') === 'admin'? <AdminDashboard /> : <Navigate to="/books" />}/>
+    <Route path="/admin/*" element={ role === 'admin'? <AdminDashboard /> : <Navigate to="/books" />}/>
     <Route path="*" element={<Navigate to="/login" />} />
   </Routes>
   <ToastContainer position="top-right" autoClose={3000} />

@@ -33,7 +33,7 @@ const BookCard = ({ book, onBorrowSuccess }) => {
         <div style={styles.card}>
             <div style={styles.imageWrapper}>
                 <img src={displayImage} alt={book.book_name} style={styles.image} />
-                {book.available_count == 0 && <div style={styles.soldOutBadge}>Sold Out</div>}
+                {book.available_count === 0 && <div style={styles.soldOutBadge}>Sold Out</div>}
             </div>
             <div style={styles.content}>
                 <div style={{minHeight: '100px'}}>
@@ -46,7 +46,7 @@ const BookCard = ({ book, onBorrowSuccess }) => {
                     </div>
                     <button 
                         onClick={handleBorrow} 
-                        disabled={book.available_count == 0}
+                        disabled={book.available_count === 0}
                         style={book.available_count > 0 ? styles.button : styles.disabledButton}
                     >
                         {book.available_count > 0 ? 'Borrow Now' : 'Out of Stock'}

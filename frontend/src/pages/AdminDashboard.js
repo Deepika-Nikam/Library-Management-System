@@ -3,6 +3,11 @@ import Dashboard from './Dashboard';
 import AdminLogs from './AdminLogs';
 import AddBookForm from './AddBookForm';
 import ManageBooks from './ManageBooks';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import BookIcon from '@mui/icons-material/Book';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -11,7 +16,7 @@ const AdminDashboard = () => {
         <div style={styles.container}>
             <aside style={styles.sidebar}>
                 <div style={styles.brand}>
-                    <span style={{fontSize: '24px'}}>🏛️</span>
+                    <span style={{fontSize: '24px'}}><AdminPanelSettingsIcon style={{ fontSize: '30px' }} /></span>
                     <h2 style={styles.brandText}>LMS ADMIN</h2>
                 </div>
                 
@@ -20,25 +25,25 @@ const AdminDashboard = () => {
                         style={activeTab === 'dashboard' ? styles.activeBtn : styles.btn} 
                         onClick={() => setActiveTab('dashboard')}
                     >
-                        Dashboard
+                        <QueryStatsIcon style={{ marginRight: '10px', fontSize: '18px' }} />Statistics Overview
                     </button>
                     <button 
                         style={activeTab === 'logs' ? styles.activeBtn : styles.btn} 
                         onClick={() => setActiveTab('logs')}
                     >
-                         System Logs
+                         <BookIcon style={{ marginRight: '10px', fontSize: '18px' }} />System Logs
                     </button>
                     <button 
                         style={activeTab === 'add' ? styles.activeBtn : styles.btn} 
                         onClick={() => setActiveTab('add')}
                     >
-                        Add New Book
+                        <AddBoxIcon style={{ marginRight: '10px', fontSize: '18px' }} />Add New Book
                     </button>
                     <button
                         style={activeTab === 'manage' ? styles.activeBtn : styles.btn} 
                         onClick={() => setActiveTab('manage')}
                     >
-                        Manage Books
+                        <CollectionsBookmarkIcon style={{ marginRight: '10px', fontSize: '18px' }} />Manage Books
                     </button>
                 </nav>
             </aside>

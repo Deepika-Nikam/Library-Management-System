@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const handleLogout = () => {
   return (
     <nav style={styles.nav}>
       <div style={styles.logoContainer} onClick={() => navigate('/books')}>
-        <span style={styles.logoIcon}>📚</span>
+        <span style={styles.logoIcon}><LocalLibraryIcon style={{ fontSize: '30px' }} /></span>
         <h2 style={styles.logoText}>LMS <span style={styles.logoSubtext}>Pro</span></h2>
       </div>
 

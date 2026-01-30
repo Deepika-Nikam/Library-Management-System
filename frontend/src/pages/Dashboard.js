@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import SchoolIcon from '@mui/icons-material/School';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
 const Dashboard = () => {
     const [stats, setStats] = useState({ total_books: 0, active_loans: 0, total_students: 0 });
@@ -16,24 +19,24 @@ const Dashboard = () => {
 
     return (
         <div style={styles.container}>
-            <h2 style={styles.title}>📊 Library Intelligence</h2>
+            <h2 style={styles.title}> Library Statistics</h2>
             <div style={styles.statsGrid}>
                 <div style={{...styles.card, borderTop: '4px solid #3498db'}}>
-                    <div style={styles.iconBox}>📚</div>
+                    <div style={styles.iconBox}><LibraryBooksIcon style={{ marginRight: '10px', fontSize: '30px' }} /></div>
                     <div>
                         <p style={styles.cardLabel}>Total Collection</p>
                         <h3 style={styles.cardNumber}>{stats.total_books}</h3>
                     </div>
                 </div>
                 <div style={{...styles.card, borderTop: '4px solid #e67e22'}}>
-                    <div style={styles.iconBox}>⏳</div>
+                    <div style={styles.iconBox}><HourglassEmptyIcon style={{ marginRight: '10px', fontSize: '30px' }} /></div>
                     <div>
                         <p style={styles.cardLabel}>Books Issued</p>
                         <h3 style={styles.cardNumber}>{stats.active_loans}</h3>
                     </div>
                 </div>
                 <div style={{...styles.card, borderTop: '4px solid #2ecc71'}}>
-                    <div style={styles.iconBox}>🎓</div>
+                    <div style={styles.iconBox}><SchoolIcon style={{ marginRight: '10px', fontSize: '30px' }} /></div>
                     <div>
                         <p style={styles.cardLabel}>Registered Students</p>
                         <h3 style={styles.cardNumber}>{stats.total_students}</h3>

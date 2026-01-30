@@ -1,7 +1,19 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
+# Ignore node_modules in ANY folder
+node_modules/
+**/node_modules/
+
+# Ignore environment variables (Important!)
+.env
+.env.local
+backend/.env
+# Ignore build/dist folders
+build/
+dist/
+frontend/build/
+
+
 /.pnp
 .pnp.js
 
